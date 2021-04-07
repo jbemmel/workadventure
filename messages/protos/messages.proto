@@ -66,6 +66,15 @@ message ReportPlayerMessage {
   string reportComment = 2;
 }
 
+message EmotePromptMessage {
+    string emote = 2;
+}
+
+message EmoteEventMessage {
+    int32 actorUserId = 1;
+    string emote = 2;
+}
+
 message QueryJitsiJwtMessage {
   string jitsiRoom = 1;
   string tag = 2; // FIXME: rather than reading the tag from the query, we should read it from the current map!
@@ -84,6 +93,7 @@ message ClientToServerMessage {
     StopGlobalMessage stopGlobalMessage = 10;
     ReportPlayerMessage reportPlayerMessage = 11;
     QueryJitsiJwtMessage queryJitsiJwtMessage = 12;
+    EmotePromptMessage emotePromptMessage = 13;
   }
 }
 
@@ -242,6 +252,7 @@ message ServerToClientMessage {
     WorldFullWarningMessage worldFullWarningMessage = 15;
     WorldFullMessage worldFullMessage = 16;
     RefreshRoomMessage refreshRoomMessage = 17; 
+    EmoteEventMessage emoteEventMessage = 18;
   }
 }
 
@@ -312,6 +323,7 @@ message PusherToBackMessage {
     QueryJitsiJwtMessage queryJitsiJwtMessage = 11;
     SendUserMessage sendUserMessage = 12;
     BanUserMessage banUserMessage = 13;
+    EmotePromptMessage emotePromptMessage = 14;
   }
 }
 

@@ -22,6 +22,7 @@ import {
     WorldFullMessage,
     AdminPusherToBackMessage,
     ServerToAdminClientMessage,
+    EmoteEventMessage,
     UserJoinedRoomMessage, UserLeftRoomMessage, AdminMessage, BanMessage, RefreshRoomMessage
 } from "../Messages/generated/messages_pb";
 import {ProtobufUtils} from "../Model/Websocket/ProtobufUtils";
@@ -566,6 +567,13 @@ export class SocketManager implements ZoneEventListener {
         if (!room || !room.needsUpdate(versionNumber)) return;
         
         this.updateRoomWithAdminData(room);
+    }
+
+    handleEmotePromptMessage(client: ExSocketInterface, emoteEventmessage: EmoteEventMessage) {
+        const pusherToBackMessage = new PusherToBackMessage();
+        pusherToBackMessage.setEmoteeventmessage(emoteEventmessage);
+
+        client.backConnection.write(pusherToBackMessage);
     }
 }
 

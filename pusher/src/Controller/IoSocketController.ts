@@ -12,6 +12,7 @@ import {
     WebRtcSignalToServerMessage,
     PlayGlobalMessage,
     ReportPlayerMessage,
+    EmoteEventMessage,
     QueryJitsiJwtMessage, SendUserMessage, ServerToClientMessage, CompanionMessage
 } from "../Messages/generated/messages_pb";
 import {UserMovesMessage} from "../Messages/generated/messages_pb";
@@ -317,6 +318,8 @@ export class IoSocketController {
                     socketManager.handleReportMessage(client, message.getReportplayermessage() as ReportPlayerMessage);
                 } else if (message.hasQueryjitsijwtmessage()){
                     socketManager.handleQueryJitsiJwtMessage(client, message.getQueryjitsijwtmessage() as QueryJitsiJwtMessage);
+                } else if (message.hasEmoteeventmessage()){
+                    socketManager.handleEmotePromptMessage(client, message.getEmoteeventmessage() as EmoteEventMessage);
                 }
 
                     /* Ok is false if backpressure was built up, wait for drain */

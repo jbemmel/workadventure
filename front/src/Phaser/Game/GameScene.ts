@@ -80,6 +80,7 @@ import { lazyLoadCompanionResource } from "../Companion/CompanionTexturesLoading
 import {touchScreenManager} from "../../Touch/TouchScreenManager";
 import {PinchManager} from "../UserInput/PinchManager";
 import {joystickBaseImg, joystickBaseKey, joystickThumbImg, joystickThumbKey} from "../Components/MobileJoystick";
+import {emoteEventStream} from "../../Connexion/EmoteEventStream";
 
 export interface GameSceneInitInterface {
     initPosition: PointInterface|null,
@@ -496,8 +497,17 @@ export class GameScene extends ResizableScene implements CenterListener {
 
         //todo: use a menu instead.
         this.input.keyboard.on('keyup-O', () => {
+            this.connection.emitEmoteEvent('emote-music');
             this.CurrentPlayer.playEmote('emote-music');
         });
+
+
+        emoteEventStream.stream.subscribe((event) => {
+            const actor = this.MapPlayersByKey.get(event.userId);
+            if (actor) {
+                actor.playEmote(event.emoteName);
+            }
+        })
     }
 
     /**

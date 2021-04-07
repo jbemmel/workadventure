@@ -26,6 +26,7 @@ import {
     GroupLeftZoneMessage,
     WorldFullWarningMessage,
     UserLeftZoneMessage,
+    EmoteEventMessage,
     BanUserMessage, RefreshRoomMessage,
 } from "../Messages/generated/messages_pb";
 import {User, UserSocket} from "../Model/User";
@@ -73,6 +74,9 @@ export class SocketManager {
         clientEventsEmitter.registerToClientLeave((clientUUid: string, roomId: string) => {
             gaugeManager.decNbClientPerRoomGauge(roomId);
         });
+
+
+        //zoneMessageStream.stream.subscribe(myMessage);
     }
 
     public async handleJoinRoom(socket: UserSocket, joinRoomMessage: JoinRoomMessage): Promise<{ room: GameRoom; user: User }> {
@@ -750,6 +754,10 @@ export class SocketManager {
 
             recipient.socket.write(clientMessage);
         });
+    }
+
+    handleEmoteEventMessage(room: GameRoom, user: User, emoteEventmessage: EmoteEventMessage) {
+        room.emitEmoteEvent(user, emoteEventmessage);
     }
 }
 

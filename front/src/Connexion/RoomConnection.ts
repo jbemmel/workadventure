@@ -27,7 +27,7 @@ import {
     SendJitsiJwtMessage,
     CharacterLayerMessage,
     PingMessage,
-    SendUserMessage, BanUserMessage
+    SendUserMessage, BanUserMessage, EmoteEventMessage, EmotePromptMessage
 } from "../Messages/generated/messages_pb"
 
 import {UserSimplePeerInterface} from "../WebRtc/SimplePeer";
@@ -46,6 +46,7 @@ import {adminMessagesService} from "./AdminMessagesService";
 import {worldFullMessageStream} from "./WorldFullMessageStream";
 import {worldFullWarningStream} from "./WorldFullWarningStream";
 import {connectionManager} from "./ConnectionManager";
+import {emoteEventStream} from "./EmoteEventStream";
 
 const manualPingDelay = 20000;
 
@@ -193,6 +194,9 @@ export class RoomConnection implements RoomConnection {
                 worldFullWarningStream.onMessage();
             } else if (message.hasRefreshroommessage()) {
                 //todo: implement a way to notify the user the room was refreshed.
+            } else if (message.hasEmoteeventmessage()) {
+                const emoteMessage = message as unknown as EmoteEventMessage;
+                emoteEventStream.onMessage(emoteMessage.getActoruserid(), emoteMessage.getEmote());
             } else {
                 throw new Error('Unknown message received');
             }
@@ -594,5 +598,15 @@ export class RoomConnection implements RoomConnection {
 
     public isAdmin(): boolean {
         return this.hasTag('admin');
+    }
+
+    public emitEmoteEvent(emoteName: string): void {
+        const emoteMessage = new EmotePromptMessage();
+        emoteMessage.setEmote(emoteName)
+
+        const clientToServerMessage = new ClientToServerMessage();
+        clientToServerMessage.setEmotepromptmessage(emoteMessage);
+
+        this.socket.send(clientToServerMessage.serializeBinary().buffer);
     }
 }

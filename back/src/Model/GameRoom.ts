@@ -7,7 +7,7 @@ import {PositionNotifier} from "./PositionNotifier";
 import {Movable} from "_Model/Movable";
 import {extractDataFromPrivateRoomId, extractRoomSlugPublicRoomId, isRoomAnonymous} from "./RoomIdentifier";
 import {arrayIntersect} from "../Services/ArrayHelper";
-import {JoinRoomMessage} from "../Messages/generated/messages_pb";
+import {EmoteEventMessage, JoinRoomMessage} from "../Messages/generated/messages_pb";
 import {ProtobufUtils} from "../Model/Websocket/ProtobufUtils";
 import {ZoneSocket} from "src/RoomManager";
 import {Admin} from "../Model/Admin";
@@ -324,5 +324,9 @@ export class GameRoom {
     public incrementVersion(): number {
         this.versionNumber++
         return this.versionNumber;
+    }
+
+    public emitEmoteEvent(user: User, emoteEventMessage: EmoteEventMessage) {
+        this.positionNotifier.emitEmoteEvent(user, emoteEventMessage);
     }
 }
