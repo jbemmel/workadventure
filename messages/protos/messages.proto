@@ -341,6 +341,7 @@ message SubToPusherMessage {
     ItemEventMessage itemEventMessage = 6;
     SendUserMessage sendUserMessage = 7;
     BanUserMessage banUserMessage = 8;
+    EmoteEventMessage emoteEventMessage = 9;
   }
 }
 

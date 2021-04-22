@@ -8,12 +8,14 @@ import {EmoteEventMessage} from "../Messages/generated/messages_pb";
 export type EntersCallback = (thing: Movable, fromZone: Zone|null, listener: ZoneSocket) => void;
 export type MovesCallback = (thing: Movable, position: PositionInterface, listener: ZoneSocket) => void;
 export type LeavesCallback = (thing: Movable, newZone: Zone|null, listener: ZoneSocket) => void;
+export type EmoteCallback = (emoteEventMessage: EmoteEventMessage, listener: ZoneSocket) => void;
 
 export class Zone {
     private things: Set<Movable> = new Set<Movable>();
     private listeners: Set<ZoneSocket> = new Set<ZoneSocket>();
     
-    constructor(private onEnters: EntersCallback, private onMoves: MovesCallback, private onLeaves: LeavesCallback, public readonly x: number, public readonly y: number) { }
+    
+    constructor(private onEnters: EntersCallback, private onMoves: MovesCallback, private onLeaves: LeavesCallback, private onEmote: EmoteCallback, public readonly x: number, public readonly y: number) { }
 
     /**
      * A user/thing leaves the zone
@@ -84,10 +86,9 @@ export class Zone {
     }
 
     public emitEmoteEvent(emoteEventMessage: EmoteEventMessage) {
+        for (const listener of this.listeners) {
+            this.onEmote(emoteEventMessage, listener);
+        }
         
-    }
-    
-    private onEnter() {
-        //todo create enter message
     }
 }

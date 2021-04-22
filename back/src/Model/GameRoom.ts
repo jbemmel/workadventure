@@ -2,7 +2,7 @@ import {PointInterface} from "./Websocket/PointInterface";
 import {Group} from "./Group";
 import {User, UserSocket} from "./User";
 import {PositionInterface} from "_Model/PositionInterface";
-import {EntersCallback, LeavesCallback, MovesCallback} from "_Model/Zone";
+import {EmoteCallback, EntersCallback, LeavesCallback, MovesCallback} from "_Model/Zone";
 import {PositionNotifier} from "./PositionNotifier";
 import {Movable} from "_Model/Movable";
 import {extractDataFromPrivateRoomId, extractRoomSlugPublicRoomId, isRoomAnonymous} from "./RoomIdentifier";
@@ -51,8 +51,9 @@ export class GameRoom {
                 groupRadius: number,
                 onEnters: EntersCallback,
                 onMoves: MovesCallback,
-                onLeaves: LeavesCallback)
-    {
+                onLeaves: LeavesCallback,
+                onEmote: EmoteCallback,
+    ) {
         this.roomId = roomId;
 
         if (isRoomAnonymous(roomId)) {
@@ -74,7 +75,7 @@ export class GameRoom {
         this.minDistance = minDistance;
         this.groupRadius = groupRadius;
         // A zone is 10 sprites wide.
-        this.positionNotifier = new PositionNotifier(320, 320, onEnters, onMoves, onLeaves);
+        this.positionNotifier = new PositionNotifier(320, 320, onEnters, onMoves, onLeaves, onEmote);
     }
 
     public getGroups(): Group[] {

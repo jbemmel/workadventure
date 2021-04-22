@@ -4,7 +4,8 @@ import {
     AdminMessage,
     AdminPusherToBackMessage,
     AdminRoomMessage,
-    BanMessage, EmoteEventMessage,
+    BanMessage,
+    EmotePromptMessage,
     EmptyMessage,
     ItemEventMessage,
     JoinRoomMessage,
@@ -71,8 +72,8 @@ const roomManager: IRoomManagerServer = {
                         socketManager.emitPlayGlobalMessage(room, message.getPlayglobalmessage() as PlayGlobalMessage);
                     } else if (message.hasQueryjitsijwtmessage()){
                         socketManager.handleQueryJitsiJwtMessage(user, message.getQueryjitsijwtmessage() as QueryJitsiJwtMessage);
-                    } else if (message.hasEmoteeventmessage()){
-                        socketManager.handleEmoteEventMessage(room, user, message.getEmoteeventmessage() as EmoteEventMessage);
+                    } else if (message.hasEmotepromptmessage()){
+                        socketManager.handleEmoteEventMessage(room, user, message.getEmotepromptmessage() as EmotePromptMessage);
                     }else if (message.hasSendusermessage()) {
                         const sendUserMessage = message.getSendusermessage();
                         if(sendUserMessage !== undefined) {
