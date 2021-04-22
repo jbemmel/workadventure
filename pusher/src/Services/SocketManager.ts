@@ -257,7 +257,10 @@ export class SocketManager implements ZoneEventListener {
 
 
     onEmote(emoteMessage: EmoteEventMessage, listener: ExSocketInterface): void {
-        throw new Error("Method not implemented.");
+        const subMessage = new SubMessage();
+        subMessage.setEmoteeventmessage(emoteMessage);
+
+        emitInBatch(listener, subMessage);
     }
 
     // Useless now, will be useful again if we allow editing details in game

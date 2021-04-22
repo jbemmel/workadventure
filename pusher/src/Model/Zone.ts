@@ -264,9 +264,9 @@ export class Zone {
         }
     }
 
-    private notifyEmote(actorId: number, emoteMessage: EmoteEventMessage) {
+    private notifyEmote(emoteMessage: EmoteEventMessage) {
         for (const listener of this.listeners) {
-            if (listener.userId === actorId) {
+            if (listener.userId === emoteMessage.getActoruserid()) {
                 continue;
             }
             this.socketListener.onEmote(emoteMessage, listener);

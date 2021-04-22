@@ -124,7 +124,7 @@ export class RoomConnection implements RoomConnection {
 
             if (message.hasBatchmessage()) {
                 for (const subMessage of (message.getBatchmessage() as BatchMessage).getPayloadList()) {
-                    let event: string;
+                    let event: string|null = null;
                     let payload;
                     if (subMessage.hasUsermovedmessage()) {
                         event = EventMessage.USER_MOVED;
@@ -144,11 +144,16 @@ export class RoomConnection implements RoomConnection {
                     } else if (subMessage.hasItemeventmessage()) {
                         event = EventMessage.ITEM_EVENT;
                         payload = subMessage.getItemeventmessage();
+                    } else if (subMessage.hasEmoteeventmessage()) {
+                        const emoteMessage = subMessage.getEmoteeventmessage() as EmoteEventMessage;
+                        emoteEventStream.onMessage(emoteMessage.getActoruserid(), emoteMessage.getEmote());
                     } else {
                         throw new Error('Unexpected batch message type');
                     }
 
-                    this.dispatch(event, payload);
+                    if (event) {
+                        this.dispatch(event, payload);
+                    }
                 }
             } else if (message.hasRoomjoinedmessage()) {
                 const roomJoinedMessage = message.getRoomjoinedmessage() as RoomJoinedMessage;
@@ -194,9 +199,6 @@ export class RoomConnection implements RoomConnection {
                 worldFullWarningStream.onMessage();
             } else if (message.hasRefreshroommessage()) {
                 //todo: implement a way to notify the user the room was refreshed.
-            } else if (message.hasEmoteeventmessage()) {
-                const emoteMessage = message as unknown as EmoteEventMessage;
-                emoteEventStream.onMessage(emoteMessage.getActoruserid(), emoteMessage.getEmote());
             } else {
                 throw new Error('Unknown message received');
             }

@@ -132,6 +132,7 @@ message SubMessage {
     UserJoinedMessage userJoinedMessage = 4;
     UserLeftMessage userLeftMessage = 5;
     ItemEventMessage itemEventMessage = 6;
+    EmoteEventMessage emoteEventMessage = 7;
   }
 }
 
